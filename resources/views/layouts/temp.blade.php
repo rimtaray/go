@@ -126,7 +126,7 @@
                         {
                         ?>
                         <li class="nav-main-item">
-                            <a class="nav-main-link{{ request()->is('sale*') ? ' active' : '' }}" href="{{ url('sale') }}" target="_blank">
+                            <a class="nav-main-link{{ request()->is('sale*') ? ' active' : '' }}"  href="{{ url('sale') }}" onclick="window.open('{{ url('sale') }}', 'pos', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no, width=screen.availWidth,height=screen.availHeight'); return false;">
                                 <i class="nav-main-link-icon si si-cursor"></i>
                                 <span class="nav-main-link-name">POS</span>
                             </a>

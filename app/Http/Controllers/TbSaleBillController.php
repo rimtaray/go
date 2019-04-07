@@ -51,6 +51,21 @@ class TbSaleBillController extends Controller
                 $this->ins_basket($prod[0],$key,$value,$sbno);
             }
         }
+
+        foreach($req->credit_id as $key => $value)
+        {
+            $this->ins_credit($req, $sbno, $key);
+        }
+
+        foreach($req->check_id as $key => $value)
+        {
+            $this->ins_check($req, $sbno, $key);
+        }
+
+        // foreach($req->bank_id as $key => $value)
+        // {
+        //     $this->ins_bank($req, $sbno, $key);
+        // }
         
         // ออกใบเสร็จ
         return $this->go_to_bill($sbno);
@@ -103,65 +118,7 @@ class TbSaleBillController extends Controller
         return $data;
     }
 
-    // private function add_sale($id)
-    // {            
-    //     $product = DB::table('tb_product')
-    //             ->select('p_name','tb_product_detail.pd_id','ps_id','pd_cost','pd_price','pd_price','ps_id','ps_num', 'p_stock', 'p_sn')
-    //             ->join('tb_product_detail','tb_product_detail.p_id','=','tb_product.p_id')
-    //             ->join('tb_product_sn','tb_product_detail.pd_id','=','tb_product_sn.pd_id')
-    //             ->where('ps_sn',$id)
-    //             ->where('pd_status','1')
-    //             ->where('ps_num','>','0')
-    //             ->where('m_id',session()->get('mid'))
-    //             ->orderBy('tb_product_detail.created_at','asc')
-    //             ->first();
-        
-    //     if($product)
-    //     {
-    //         if($product->p_stock == '1')  // เช็คตัดสต๊อก
-    //         {
-    //             //$this->cut_number($product);
-    //         }
-
-    //         $chk_basket = $this->chk_basket($id); // เช็คจำนวนในตะกร้า
-    //         if($chk_basket == '0')
-    //         {
-    //             //$this->ins_basket($product,$id);  
-    //             //SWAL::message('ผลการทำงาน','insert','success',['timer'=>3000]);                  
-    //         }
-    //         else
-    //         {
-    //             //$this->upd_basket($chk_basket->s_id,$chk_basket->s_num+1);    
-    //             //SWAL::message('ผลการทำงาน','update','success',['timer'=>3000]);  
-    //         }
-            
-    //         SWAL::message('ผลการทำงาน','เพิ่มสินค้าลงตะกร้าแล้ว','success',['timer'=>3000]); 
-    //     }
-    //     else
-    //     {
-    //         SWAL::message('ผลการทำงาน','ไม่พบสินค้ารหัส '.$id,'warning',['timer'=>3000]);
-    //     }
-    //     return redirect('sale');
-    // }
-
-    // private function pay($req)
-    // {
-    //     $sbno = $this->ins_sale_bill($req);
-    //     $this->upd_basket($sbno);
-    //     // ออกใบเสร็จ
-    //     return $this->go_to_bill($sbno);
-    // }
-
-    // private function upd_basket($sbno)
-    // {
-    //     DB::table('tb_sale')
-    //         ->where('s_status','0')
-    //         ->where('u_id', session()->get('uid'))
-    //         ->where('m_id', session()->get('mid'))
-    //         ->update(['s_status'=>'1','sb_no'=>$sbno]);
-
-    //     return 1;
-    // }
+    
 
     private function ins_sale_bill($req)
     {
@@ -181,30 +138,30 @@ class TbSaleBillController extends Controller
         $upd->bno_no = $sbno;
         $upd->save();
 
-        if($req->credit_name != '')
-        {
-            $this->ins_credit($req, $sbno);
-        }
+        // if($req->credit_name != '')
+        // {
+        //     $this->ins_credit($req, $sbno);
+        // }
 
-        if($req->check_name != '')
-        {
-            $this->ins_check($req, $sbno);
-        }
+        // if($req->check_name != '')
+        // {
+        //     $this->ins_check($req, $sbno);
+        // }
 
         return $sbno;
     }
 
-    private function ins_credit($req, $sbno)
+    private function ins_credit($req, $sbno, $key)
     {
         $ins = new TbPayment();
         $ins->pay_type = '1';
-        $ins->pay_type_id = $req->credit_id;
-        $ins->pay_amount = $req->credit_pay;
-        $ins->pay_free = $req->credit_free;
-        $ins->pay_credit_no = $req->credit_no;
-        $ins->pay_credit_expired = $req->credit_expired;
-        $ins->pay_installment_no = $req->credit_installment;
-        $ins->pay_isim = $req->credit_isim;
+        $ins->pay_type_id = $req->credit_id[$key];
+        $ins->pay_amount = $req->credit_pay[$key];
+        $ins->pay_free = $req->credit_free[$key];
+        $ins->pay_credit_no = $req->credit_no[$key];
+        $ins->pay_credit_expired = $req->credit_expired[$key];
+        $ins->pay_installment_no = $req->credit_installment[$key];
+        $ins->pay_isim = $req->credit_isim[$key];
         $ins->pay_status = '1';
         $ins->m_id = session()->get('mid');
         $ins->sb_no = $sbno;
@@ -213,16 +170,35 @@ class TbSaleBillController extends Controller
         return 1;
     }
 
-    private function ins_check($req, $sbno)
+    private function ins_check($req, $sbno, $key)
     {
         $ins = new TbCheck();
-        $ins->ch_name = $req->check_name;
-        $ins->ch_branch = $req->check_branch;
-        $ins->ch_number = $req->check_number;
-        $ins->ch_date = $req->check_date;
-        $ins->ch_no = $req->check_no;
-        $ins->ch_amount = $req->check_amount;
-        $ins->ch_status = $req->check_status;
+        $ins->ch_name = $req->check_name[$key];
+        $ins->ch_branch = $req->check_branch[$key];
+        $ins->ch_number = $req->check_number[$key];
+        $ins->ch_date = $req->check_date[$key];
+        $ins->ch_no = $req->check_no[$key];
+        $ins->ch_amount = $req->check_amount[$key];
+        $ins->ch_status = $req->check_status[$key];
+        $ins->m_id = session()->get('mid');
+        $ins->sb_no = $sbno;
+        $ins->save();
+
+        return 1;
+    }
+
+    private function ins_bank($req, $sbno, $key)
+    {
+        $ins = new TbPayment();
+        $ins->pay_type = '4';
+        $ins->pay_type_id = $req->t_bank_id[$key];
+        $ins->pay_amount = $req->t_bank_amount[$key];
+        $ins->pay_free = '';
+        $ins->pay_credit_no = '';
+        $ins->pay_credit_expired = '';
+        $ins->pay_installment_no = '';
+        $ins->pay_isim = '';
+        $ins->pay_status = '1';
         $ins->m_id = session()->get('mid');
         $ins->sb_no = $sbno;
         $ins->save();

@@ -136,7 +136,7 @@
 
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <table class="table table-striped table-hover table-vcenter">
+                                                    <table id="tb-pay-etc" class="table table-striped table-hover table-vcenter">
                                                         <thead>
                                                             <tr>
                                                                 <th class="text-center" style="width: 60%;">รายละเอียดการชำระ</th>
@@ -157,11 +157,47 @@
                                                     </table>
                                                 </div>
                                                 <div class="col-6">
+
+
                                                     <div class="form-group">
                                                         <h3 id="total-pay"></h3>
                                                         <input type="hidden" class="form-control sum_cash" value="" readonly id="pricetotal" name="pricetotal" >
                                                     </div>
-                                                    <div class="form-group">
+
+                                                    <div class="form-group mb-2">
+                                                        <label for="">ชำระโดยเงินสด</label>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <button type="button" class="m-1 btn btn-square btn-hero-success" onclick="get_cash(20)">20</button>
+                                                            <button type="button" class="m-1 btn btn-square btn-hero-info" onclick="get_cash(50)">50</button>
+                                                            <button type="button" class="m-1 btn btn-square btn-hero-danger" onclick="get_cash(100)">100</button>
+                                                            <button type="button" class="m-1 btn btn-square btn-hero-primary" onclick="get_cash(500)">500</button>
+                                                            <button type="button" class="m-1 btn btn-square btn-hero-secondary" onclick="get_cash(1000)">1000</button>
+                                                            <button type="button" class="m-1 btn btn-square btn-hero-success" onclick="get_balance()">พอดี</button>
+                                                            <button type="button" class="m-1 btn btn-square btn-outline-danger" onclick="get_clear()">ล้าง</button>
+                                                            
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group m-2">
+                                                        <label for="">ชำระโดยวิธีอื่น</label>
+                                                    </div>
+        
+                                                    <div class="row">
+                                                        <div class="col-12">
+        
+                                                            <button type="button" class="btn btn-outline-info open_modal" id="b-credit" data-href="{{ url('payment/add/credit') }}"><small>บัตรเครดิต</small></button>
+        
+                                                            <button type="button" class="btn btn-outline-info open_modal" id="b-check" data-href="{{ url('payment/add/check') }}"><small>เช็ค</small></button>
+        
+                                                            <button type="button" class="btn btn-outline-info open_modal" id="b-transfer" data-href="{{ url('payment/add/transfer') }}"><small>เงินโอน</small></button>
+                                                            
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group mt-4">
                                                         <label for="t_name">ส่วนลด</label>
                                                         <input type="decimal" class="form-control discount" value="0" onfocusout="input0()" onkeyup="torn()" id="discount" name="discount" maxlength="11">
                                                     </div>
@@ -180,31 +216,6 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <button type="button" class="px-3 btn btn-square btn-hero-success" onclick="get_cash(20)">20</button>
-                                                    <button type="button" class="px-3 btn btn-square btn-hero-info" onclick="get_cash(50)">50</button>
-                                                    <button type="button" class="px-3 btn btn-square btn-hero-danger" onclick="get_cash(100)">100</button>
-                                                    <button type="button" class="px-3 btn btn-square btn-hero-primary" onclick="get_cash(500)">500</button>
-                                                    <button type="button" class="px-3 btn btn-square btn-hero-secondary" onclick="get_cash(1000)">1000</button>
-                                                    <button type="button" class="px-3 btn btn-square btn-hero-success" onclick="get_balance()">พอดี</button>
-                                                    <button type="button" class="px-3 btn btn-square btn-outline-danger" onclick="get_clear()">ล้าง</button>
-                                                    
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-12 m-1">
-
-                                                    <button type="button" class="btn btn-outline-info open_modal" id="b-credit" data-href="{{ url('payment/add/credit') }}"><small>บัตรเครดิต</small></button>
-
-                                                    <button type="button" class="btn btn-outline-info open_modal" id="b-check" data-href="{{ url('payment/add/check') }}"><small>เช็ค</small></button>
-
-                                                    <button type="button" class="btn btn-outline-info open_modal" id="b-transfer" data-href="{{ url('payment/add/transfer') }}"><small>เงินโอน</small></button>
-                                                    
-                                                </div>
-                                            </div>
-
                                         </div>
                                     </div>
                                     
@@ -214,7 +225,9 @@
                             </div>
                             <div class="block-content block-content-full text-right bg-light">
                                 <button type="button" class="btn btn-sm btn-light" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="pay()">ชำระเงิน</button>
+                                <button type="button" class="btn btn-primary" onclick="pay()">
+                                    <i class="fa fa-print"></i>
+                                    บันทึก / พิมพ์</button>
                             </div>
                 
 
@@ -360,28 +373,23 @@
 
                           
                 <div class="block block-rounded block-bordered">
-                    <div class="block-header block-header-default">
-    
-                        <div class="row">
-                            <div class="col-sm-12 category catScroll">
-    
-    
-                            <div class="block-content">
-                            
-                                
-                                        <button type="button" class="px-3 btn btn-square btn-hero-info btn-cat" id="btncat0" get_cat="{{ URL::to('sale/read-data/0') }}" onclick="click_cat(0)">ทั้งหมด</button>
-                
-                                        @foreach($scat as $scat)
-                                        <button type="button" class="px-3 btn btn-square btn-outline-info btn-cat" id="btncat{{ $scat->cat_id }}" get_cat="{{ URL::to('sale/read-data/'.$scat->cat_id) }}" onclick="click_cat({{ $scat->cat_id }})">{{ $scat->cat_name }}</button>
-                                        @endforeach
-                                    
-                            
+                    
+                    <!-- Slider with multiple images and center mode -->
+                    <div class="block">
+                        <div class="js-slider slick-nav-black slick-nav-hover" data-dots="false" data-arrows="true" data-slides-to-show="10" data-center-mode="false" data-autoplay="false" data-autoplay-speed="3000">
+                            <div>
+                                <button type="button" class="btn btn-square btn-hero-info btn-cat img-fluid" id="btncat0" get_cat="{{ URL::to('sale/read-data/0') }}" onclick="click_cat(0)">ทั้งหมด</button>
                             </div>
-    
-                            </div>               
+                                @foreach($scat as $scat)
+                            <div>   
+                                <button type="button" class="btn btn-square btn-outline-info btn-cat img-fluid" id="btncat{{ $scat->cat_id }}" get_cat="{{ URL::to('sale/read-data/'.$scat->cat_id) }}" onclick="click_cat({{ $scat->cat_id }})">{{ $scat->cat_name }}</button>
+                            </div>
+                                @endforeach
                         </div>
-    
                     </div>
+                    <!-- END Slider with multiple images and center mode -->
+
+
                         <div class="block-content p-1 productScroll" id="block-product">
                             
                         </div>
@@ -530,28 +538,29 @@
     });
 
     // เพิ่มการจ่ายด้วยเงินโอน
-    function bank_add(id)
+    function bank_add()
     {
-        let txt_amount = "$('#t_bank_amount["+id+"]').val();";
-        console.log(txt_amount);
+        let dt = time_create();
 
-        let bank_id = "<input type='hidden' name='t_bank_id["+id+"]' value='" + id + "'>";
-        let bank_amount = "<input type='hidden' name='t_bank_amount["+id+"]' value='"+txt_amount+"'>";
-        console.log(bank_amount);
+        let txt_amount = $('#t_bank_amount').val();
+
+        let bb_id = "<input type='hidden' name='bank_id["+dt+"]' value=''>";
+        let bank_id = "<input type='hidden' name='t_bank_id' value='" + $('#t_bank_id').val() + "'>";
+        let bank_amount = "<input type='hidden' name='t_bank_amount' value='"+txt_amount+"'>";
 
         // จ่ายด้วยวิธีอื่นๆ
         // เพิ่ม hidden ของการจ่ายด้วยเงินโอน
         let oth_pay = $('.other-pay').html();
-        let input_bank = "<div class='hidden-other-buy'>" + bank_id + bank_amount + "</div>";
+        let input_bank = "<div class='hidden-other-buy' id='bank"+dt+ "'>" + bb_id + bank_id + bank_amount + "</div>";
         $('.other-pay').empty().html(oth_pay + input_bank);
 
         // เพิ่มรายละเอียดการชำระ
         let pay_etc = $(".pay-etc").html();
-        let pay_add = '<tr><td class="text-left">โอนเงิน</td><td class="text-center">' + $(txt_amount).val() + '</td><td class="text-center"><i class="fa fa-trash text-danger"></i></td></tr>';
+        let pay_add = '<tr><td class="text-left">บัญชี '+ $('#t_bank_no').val() + '</td><td class="text-center">' + txt_amount + '</td><td class="text-center"><a  class="btn-del-other" other-amount="' + txt_amount + '" del_other="bank'+dt+ '"><i class="fa fa-trash text-danger"></i></a></td></tr>';
         $('.pay-etc').empty().html(pay_etc + pay_add);
         
         // รวมจำนวนเงินในรายละเอียดชำระ
-        let pay_total = parseFloat($('.pay-total-footer').html()) + parseFloat($(txt_amount).val());
+        let pay_total = parseFloat($('.pay-total-footer').html()) + parseFloat(txt_amount);
         $('.pay-total-footer').html(pay_total);
 
         // รวมจำนวนเงินในชำระเงินด้วยวิธีอื่น
@@ -561,23 +570,26 @@
     // เพิ่มการจ่ายด้วยเช็ค
     function check_add()
     {
-        let ck_name = "<input type='hidden' class='pay_check' name='check_name' value='"+ $('#t_check_name').val() + "'>";
-        let ck_branch = "<input type='hidden' class='pay_check' name='check_branch' value='"+ $('#t_check_branch').val() + "'>";
-        let ck_number = "<input type='hidden' class='pay_check' name='check_number' value='"+ $('#t_check_number').val() + "'>";
-        let ck_date = "<input type='hidden' class='pay_check' name='check_date' value='"+ $('#t_check_date').val() + "'>";
-        let ck_no = "<input type='hidden' class='pay_check' name='check_no' value='"+ $('#t_check_no').val() + "'>";
-        let ck_amount = "<input type='hidden' class='pay_check' name='check_amount' value='"+ $('#t_check_amount').val() + "'>";
-        let ck_status = "<input type='hidden' class='pay_check' name='check_status' value='"+ $('#t_check_status').val() + "'>";
+        let dt = time_create();
+
+        let ck_id = "<input type='hidden' name='check_id["+dt+"]' value=''>";
+        let ck_name = "<input type='hidden' name='check_name["+dt+"]' value='"+ $('#t_check_name').val() + "'>";
+        let ck_branch = "<input type='hidden' name='check_branch["+dt+"]' value='"+ $('#t_check_branch').val() + "'>";
+        let ck_number = "<input type='hidden' name='check_number["+dt+"]' value='"+ $('#t_check_number').val() + "'>";
+        let ck_date = "<input type='hidden' name='check_date["+dt+"]' value='"+ $('#t_check_date').val() + "'>";
+        let ck_no = "<input type='hidden' name='check_no["+dt+"]' value='"+ $('#t_check_no').val() + "'>";
+        let ck_amount = "<input type='hidden' name='check_amount["+dt+"]' value='"+ $('#t_check_amount').val() + "'>";
+        let ck_status = "<input type='hidden' name='check_status["+dt+"]' value='"+ $('#t_check_status').val() + "'>";
 
         // จ่ายด้วยวิธีอื่นๆ
         // เพิ่ม hidden ของการจ่ายด้วยเช็ค
         let oth_pay = $('.other-pay').html();
-        let input_check = "<div class='hidden-other-buy'>" + ck_name + ck_branch + ck_number + ck_date + ck_no + ck_amount + ck_status + "</div>";
+        let input_check = "<div class='hidden-other-buy' id='check"+dt+"'>" + ck_id + ck_name + ck_branch + ck_number + ck_date + ck_no + ck_amount + ck_status + "</div>";
         $('.other-pay').empty().html(oth_pay + input_check);
 
         // เพิ่มรายละเอียดการชำระ
         let pay_etc = $(".pay-etc").html();
-        let pay_add = '<tr><td class="text-left">เช็ค</td><td class="text-center">' + $('#t_check_amount').val() + '</td><td class="text-center"><a  class="btn-del-other" other-amount="' + $('#t_check_amount').val() + '" del_other=".pay_check"><i class="fa fa-trash text-danger"></i></a></td></tr>';
+        let pay_add = '<tr><td class="text-left">เช็ค '+ $('#t_check_number').val() + '</td><td class="text-center">' + $('#t_check_amount').val() + '</td><td class="text-center"><a  class="btn-del-other" other-amount="' + $('#t_check_amount').val() + '" del_other="check'+dt+ '"><i class="fa fa-trash text-danger"></i></a></td></tr>';
         $('.pay-etc').empty().html(pay_etc + pay_add);
         
         // รวมจำนวนเงินในรายละเอียดชำระ
@@ -588,29 +600,39 @@
         $('#t_other_pay').val(pay_total);
     }
 
+    // สร้างเวลาสำหรับระบุใน array ชำระด้วยวิธีอื่น
+    function time_create()
+    {
+        let dt = new Date($.now());
+        let time = dt.getHours().toString() + dt.getMinutes().toString() + dt.getSeconds().toString();
+        return time;
+    }
+
     // เพิ่มการจ่ายด้วยบัตรเครดิต
     function credit_add()
     {      
-        let c_id = "<input type='hidden' class='pay_credit' name='credit_id' value='"+ $('#t_credit_id').val() + "'>";
-        let c_name = "<input type='hidden' class='pay_credit' name='credit_name' value='"+ $('#t_credit_name').val() + "'>";
-        let c_no = "<input type='hidden' class='pay_credit' name='credit_no' value='"+ $('#t_credit_no').val() + "'>";
-        let c_expired = "<input type='hidden' class='pay_credit' name='credit_expired' value='"+ $('#t_credit_expired').val() + "'>";
-        let c_installment = "<input type='hidden' class='pay_credit' name='credit_installment' value='"+ $('#t_credit_installment').val() + "'>";
-        let c_isim = "<input type='hidden' class='pay_credit' name='credit_isim' value='"+ $('#t_credit_isim').val() + "'>";
-        let c_pay = "<input type='hidden' class='pay_credit' name='credit_pay' value='"+ $('#t_credit_pay').val() + "'>";
-        let c_free = "<input type='hidden' class='pay_credit' name='credit_free' value='"+ $('#t_credit_free').val() + "'>";
-        let c_freepay = "<input type='hidden' class='pay_credit' name='credit_freepay' value='"+ $('#t_credit_freepay').val() + "'>";
-        let c_total = "<input type='hidden' class='pay_credit' name='credit_total' value='"+ $('#t_credit_total').val() + "'>";
+        let dt = time_create();
+
+        let c_id = "<input type='hidden' name='credit_id["+dt+"]' value='"+ $('#t_credit_id').val() + "'>";
+        let c_name = "<input type='hidden' name='credit_name["+dt+"]' value='"+ $('#t_credit_name').val() + "'>";
+        let c_no = "<input type='hidden' name='credit_no["+dt+"]' value='"+ $('#t_credit_no').val() + "'>";
+        let c_expired = "<input type='hidden' name='credit_expired["+dt+"]' value='"+ $('#t_credit_expired').val() + "'>";
+        let c_installment = "<input type='hidden' name='credit_installment' value='"+ $('#t_credit_installment').val() + "'>";
+        let c_isim = "<input type='hidden' name='credit_isim["+dt+"]' value='"+ $('#t_credit_isim').val() + "'>";
+        let c_pay = "<input type='hidden' name='credit_pay["+dt+"]' value='"+ $('#t_credit_pay').val() + "'>";
+        let c_free = "<input type='hidden' name='credit_free["+dt+"]' value='"+ $('#t_credit_free').val() + "'>";
+        let c_freepay = "<input type='hidden' name='credit_freepay["+dt+"]' value='"+ $('#t_credit_freepay').val() + "'>";
+        let c_total = "<input type='hidden' name='credit_total["+dt+"]' value='"+ $('#t_credit_total').val() + "'>";
 
         // จ่ายด้วยวิธีอื่นๆ
         // เพิ่ม hidden ของการจ่ายด้วยบัตรเครดิต
         let oth_pay = $('.other-pay').html();
-        let input_credit = "<div class='hidden-other-buy'>" + c_id + c_name + c_no + c_expired + c_installment + c_isim + c_pay + c_free + c_freepay + c_total + "</div>";
+        let input_credit = "<div class='hidden-other-buy' id='credit"+dt+"'>" + c_id + c_name + c_no + c_expired + c_installment + c_isim + c_pay + c_free + c_freepay + c_total + "</div>";
         $('.other-pay').empty().html(oth_pay + input_credit);
 
         // เพิ่มรายละเอียดการชำระ
         let pay_etc = $(".pay-etc").html();
-        let pay_add = '<tr><td class="text-left">บัตรเครดิต</td><td class="text-center">' + $('#t_credit_pay').val() + '</td><td class="text-center"><a  class="btn-del-other" other-amount="' + $('#t_credit_pay').val() + '" del_other=".pay_credit"><i class="fa fa-trash text-danger"></i></a></td></tr>';
+        let pay_add = '<tr><td class="text-left">บัตร ' + $('#t_credit_name').val() + '</td><td class="text-center">' + $('#t_credit_pay').val() + '</td><td class="text-center"><a  class="btn-del-other" other-amount="' + $('#t_credit_pay').val() + '" del_other="credit'+dt+'"><i class="fa fa-trash text-danger"></i></a></td></tr>';
         $('.pay-etc').empty().html(pay_etc + pay_add);
         
         // รวมจำนวนเงินในรายละเอียดชำระ
@@ -721,7 +743,10 @@
     function get_balance()
     {
         let money = $('#pricetotal').val();
-        $('#getmoney').val(money);
+        let dis = $("#discount").val();
+        let other = $("#t_other_pay").val();
+        let total = parseFloat(money) - parseFloat(dis) - parseFloat(other);
+        $('#getmoney').val(total);
         torn();
     }
 
@@ -840,7 +865,7 @@
     // ปุ่มลบ ของการชำระเงินด้วยวิธีอื่นๆ
     $(document).on('click','.btn-del-other',function(){
         let amount = $(this).attr('other-amount');
-        let name = $(this).attr('del_other'); 
+        let no = $(this).attr('del_other'); 
 
         // รวมจำนวนเงินในรายละเอียดชำระ
         let pay_total = parseFloat($('.pay-total-footer').html()) - parseFloat(amount);
@@ -852,7 +877,7 @@
         let tr = $(this).closest('tr');
         tr.remove();
 
-        let div = $(name).closest('div');
+        let div = $('#'+no).closest('div');
         div.remove();
 
         Dashmix.helpers('notify', {type: 'danger', icon: 'fa fa-times mr-1', message: 'ลบแล้ว'});
