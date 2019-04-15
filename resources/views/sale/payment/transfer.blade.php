@@ -31,19 +31,21 @@
                                     </thead>
                                     <tbody>
 
+                                        <? $dt = date("His"); ?>
+
                                         @foreach($data as $data)
+                                            <input type="hidden" id="t_bank_no[<?=$dt;?>]" value="{{ $data->b_no }}">
+                                            <input type="hidden" id="t_bank_id[<?=$dt;?>]" value="{{ $data->b_id }}">
+                                            <input type="hidden" id="t_bank_no{{ $data->b_id }}<?=$dt;?>" value="{{ $data->b_no }}">
+                                            <input type="hidden" id="t_bank_id{{ $data->b_id }}<?=$dt;?>" value="{{ $data->b_id }}">
                                         <tr>
                                             <td class="text-left">{{ $data->b_bank }}</td>
                                             <td class="text-left">{{ $data->b_office }}</td>
-                                            <td class="text-left">
-                                                {{ $data->b_no }}
-                                                <input type="hidden" id="t_bank_no" value="{{ $data->b_no }}">
-                                                <input type="hidden" id="t_bank_id" value="{{ $data->b_id }}">
-                                            </td>
+                                            <td class="text-left">{{ $data->b_no }}</td>
                                             <td class="text-left">{{ $data->b_name }}</td>
-                                            <td><input type="text" class="form-control" name="t_bank_amount" id="t_bank_amount" value=""></td>
+                                            <td><input type="text" class="form-control" name="t_bank_amount{{$data->b_no}}" id="t_bank_amount{{ $data->b_id }}{{$data->b_no}}" value=""></td>
                                             <td class="text-center">
-                                                <button type="button" class="btn btn-sm btn-primary" onclick="bank_add()" data-dismiss="modal">
+                                                <button type="button" class="btn btn-sm btn-primary" onclick="bank_add(<?=$dt;?>,{{ $data->b_id }})" data-dismiss="modal">
                                                     <i class="fa fa-plus"></i> เลือก
                                                 </button>
                                             </td>

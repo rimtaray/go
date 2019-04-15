@@ -25,6 +25,11 @@
             font-weight: bold;
         }
         
+        .payScroll {
+        height:200px;
+        overflow-y: scroll;
+        }
+        
         .productScroll {
         height:500px;
         overflow-y: scroll;
@@ -136,10 +141,35 @@
 
                                             <div class="row">
                                                 <div class="col-6">
+
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-6 col-form-label" >รวมเงิน</label>
+                                                        <div class="col-sm-6">
+                                                            <h3 id="total-pay"></h3>
+                                                            <input type="hidden" class="form-control sum_cash" value="" readonly id="pricetotal" name="pricetotal" >
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-6 col-form-label" >ส่วนลด</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="decimal" class="form-control discount" value="0" onfocusout="input0()" onkeyup="torn()" id="discount" name="discount" maxlength="11">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-6 col-form-label" >รวมเงินที่ต้องชำระ</label>
+                                                        <div class="col-sm-6">
+                                                            <h3 id="total-payall"></h3>
+                                                            <input type="hidden" class="form-control sum_cash_all" value="" readonly id="pricetotal_all" name="pricetotal_all" >
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="payScroll">
                                                     <table id="tb-pay-etc" class="table table-striped table-hover table-vcenter">
                                                         <thead>
                                                             <tr>
-                                                                <th class="text-center" style="width: 60%;">รายละเอียดการชำระ</th>
+                                                                <th class="text-center" style="width: 60%;">รายการชำระเงิน</th>
                                                                 <th class="text-center" style="width: 30%;">จำนวน</th>
                                                                 <th class="text-center" style="width: 10%;">ลบ</th>
                                                             </tr>
@@ -147,22 +177,28 @@
                                                         <tbody class="pay-etc">
                                                             
                                                         </tbody>
-                                                        <tfoot>
-                                                            <tr>
-                                                                <td class="text-left">รวม</td>
-                                                                <td class="text-center pay-total-footer">0</td>
-                                                                <td class="text-center"></td>
-                                                            </tr>
-                                                        </tfoot>
+                                                        
                                                     </table>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-6 col-form-label" >รวม</label>
+                                                        <div class="col-sm-6">
+                                                            <h4 id="pay-total-footer" class="pay-total-footer">0</h4>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-6 col-form-label" >เงินทอน</label>
+                                                        <div class="col-sm-6">
+                                                            <h4 id="pay-change-footer" class="pay-change-footer">0</h4>
+                                                        </div>
+                                                    </div>
+
+
                                                 </div>
                                                 <div class="col-6">
 
-
-                                                    <div class="form-group">
-                                                        <h3 id="total-pay"></h3>
-                                                        <input type="hidden" class="form-control sum_cash" value="" readonly id="pricetotal" name="pricetotal" >
-                                                    </div>
 
                                                     <div class="form-group mb-2">
                                                         <label for="">ชำระโดยเงินสด</label>
@@ -181,6 +217,11 @@
                                                         </div>
                                                     </div>
 
+                                                    <div class="form-group">
+                                                        <label for="t_name">รับเงิน</label>
+                                                        <input type="decimal" class="form-control getmoney" onkeyup="torn()"  id="getmoney" name="getmoney" maxlength="11">
+                                                    </div>
+
                                                     <div class="form-group m-2">
                                                         <label for="">ชำระโดยวิธีอื่น</label>
                                                     </div>
@@ -197,22 +238,6 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="form-group mt-4">
-                                                        <label for="t_name">ส่วนลด</label>
-                                                        <input type="decimal" class="form-control discount" value="0" onfocusout="input0()" onkeyup="torn()" id="discount" name="discount" maxlength="11">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="t_other_pay">ชำระเงินด้วยวิธีอื่น</label>
-                                                        <input type="decimal" class="form-control" value="0" id="t_other_pay" name="t_other_pay" readonly>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="t_name">รับเงิน</label>
-                                                        <input type="decimal" class="form-control getmoney" onkeyup="torn()"  id="getmoney" name="getmoney" maxlength="11">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="t_name">เงินทอน</label>
-                                                        <input type="text" class="form-control input-lg" id="total" name="total" value="" readonly >
-                                                    </div>
                                                 </div>
                                             </div>
 
@@ -319,8 +344,9 @@
                         <form action="salebill_pay" name="frm-basket" id="frm-basket" method="POST">
                         {{ csrf_field() }}  
 
-                        <input type="hidden" name="pay_discount" id="pay_discount" value="">
-                        <input type="hidden" name="pay_getmoney" id="pay_getmoney" value="">
+                        <input type="hidden" name="pay_discount" id="pay_discount" value="0">
+                        <input type="hidden" name="pay_getmoney" id="pay_getmoney" value="0">
+                        <input type="hidden" name="t_other_pay" id="t_other_pay" value="0">
 
                         <!-- จ่ายด้วยวิธีอื่นๆ -->
                         <div class="other-pay"></div>
@@ -538,15 +564,21 @@
     });
 
     // เพิ่มการจ่ายด้วยเงินโอน
-    function bank_add()
+    function bank_add(dt,id)
     {
-        let dt = time_create();
-
-        let txt_amount = $('#t_bank_amount').val();
+        //let dt = time_create();
+        let t_bid = '#t_bank_id'+id+dt;
+        let bid = $(t_bid).val();
+        //console.log(t_bid);
+        let t_bno = '#t_bank_no'+id+dt;
+        let bno = $(t_bno).val();
+        //console.log(t_bno);
+        let txt_amount = $('#t_bank_amount'+id+bno).val();
+        //console.log(txt_amount);
 
         let bb_id = "<input type='hidden' name='bank_id["+dt+"]' value=''>";
-        let bank_id = "<input type='hidden' name='t_bank_id' value='" + $('#t_bank_id').val() + "'>";
-        let bank_amount = "<input type='hidden' name='t_bank_amount' value='"+txt_amount+"'>";
+        let bank_id = "<input type='hidden' name='t_bank_id["+dt+"]' value='" + bid + "'>";
+        let bank_amount = "<input type='hidden' name='t_bank_amount["+dt+"]' value='"+txt_amount+"'>";
 
         // จ่ายด้วยวิธีอื่นๆ
         // เพิ่ม hidden ของการจ่ายด้วยเงินโอน
@@ -556,7 +588,7 @@
 
         // เพิ่มรายละเอียดการชำระ
         let pay_etc = $(".pay-etc").html();
-        let pay_add = '<tr><td class="text-left">บัญชี '+ $('#t_bank_no').val() + '</td><td class="text-center">' + txt_amount + '</td><td class="text-center"><a  class="btn-del-other" other-amount="' + txt_amount + '" del_other="bank'+dt+ '"><i class="fa fa-trash text-danger"></i></a></td></tr>';
+        let pay_add = '<tr><td class="text-left">บัญชี '+ bno + '</td><td class="text-center">' + txt_amount + '</td><td class="text-center"><a  class="btn-del-other" other-amount="' + txt_amount + '" del_other="bank'+dt+ '"><i class="fa fa-trash text-danger"></i></a></td></tr>';
         $('.pay-etc').empty().html(pay_etc + pay_add);
         
         // รวมจำนวนเงินในรายละเอียดชำระ
@@ -565,6 +597,8 @@
 
         // รวมจำนวนเงินในชำระเงินด้วยวิธีอื่น
         $('#t_other_pay').val(pay_total);
+
+        torn();
     }
 
     // เพิ่มการจ่ายด้วยเช็ค
@@ -598,6 +632,8 @@
 
         // รวมจำนวนเงินในชำระเงินด้วยวิธีอื่น
         $('#t_other_pay').val(pay_total);
+
+        torn();
     }
 
     // สร้างเวลาสำหรับระบุใน array ชำระด้วยวิธีอื่น
@@ -641,6 +677,8 @@
 
         // รวมจำนวนเงินในชำระเงินด้วยวิธีอื่น
         $('#t_other_pay').val(pay_total);
+
+        torn();
     }
 
     // $('.category').on('click', '.btn_cat', function(){
@@ -668,9 +706,14 @@
                     show: true
                 })
                 let total_pay = $('#sum_cash').html();
-                //console.log(total_pay);
-                $('#total-pay').html('รวม : ' + total_pay);
+
+                // รวมเงิน
+                $('#total-pay').html(total_pay);
                 $('#pricetotal').val(total_pay);
+
+                // รวมเงินที่ต้องชำระ
+                $("#total-payall").html(total_pay);
+                $("#pricetotal_all").val(total_pay);
             }
         });
 
@@ -718,15 +761,26 @@
 
     function torn()
     {
-        let a = $("#pricetotal").val();
-        let b = $("#discount").val();
-        let c = $("#getmoney").val();
-        let e = $("#t_other_pay").val();
-        let d = parseFloat(c) - parseFloat(a) + parseFloat(b) + parseFloat(e);
+        let a = $("#pricetotal").val();  // รวมเงิน
+        let b = $("#discount").val();  // ส่วนลด
+        let c = $("#getmoney").val();  // รับเงิน
+        let e = $("#t_other_pay").val();  // รวมเงินที่ชำระด้วยวิธีอื่น
+        //let d = parseFloat(c) - parseFloat(a) + parseFloat(b) + parseFloat(e);
+        let d = $("#pricetotal_all").val(); // รวมเงินที่ต้องชำระ หลังหักส่วนลด
 
-        $("#total").val(d);
+        let total = parseFloat(a) - parseFloat(b) ;
+        let change = parseFloat(e) - parseFloat(d);
+
+        // รวมเงินที่ต้องชำระ
+        $("#total-payall").html(total);
+        $("#pricetotal_all").val(total);
+
+        $("#total").val(change);
         $("#pay_discount").val(b);
         $("#pay_getmoney").val(c);
+
+        // เงินทอน
+        $("#pay-change-footer").html(change);
     }
 
     function get_cash(num)
@@ -737,6 +791,20 @@
         }
         let tt_money = parseFloat(num) + parseFloat(money);
         $('#getmoney').val(tt_money);
+
+
+        // เพิ่มรายละเอียดการชำระ
+        let pay_etc = $(".pay-etc").html();
+        let pay_add = '<tr><td class="text-left">เงินสดแบงค์ '+ num + '</td><td class="text-center">' + num + '</td><td class="text-center"><a  class="btn-del-cash" cash-amount="' + num + '" del_cash="cahs'+num+ '"><i class="fa fa-trash text-danger"></i></a></td></tr>';
+        $('.pay-etc').empty().html(pay_etc + pay_add);
+        
+        // รวมจำนวนเงินในรายละเอียดชำระ
+        let pay_total = parseFloat($('.pay-total-footer').html()) + parseFloat(num);
+        $('.pay-total-footer').html(pay_total);
+
+        // รวมจำนวนเงินในชำระเงินด้วยวิธีอื่น
+        $('#t_other_pay').val(pay_total);
+
         torn();
     }
 
@@ -754,6 +822,16 @@
     {
         $('#getmoney').val(0);
         $('#total').val(0);
+        $('.pay-etc').empty();
+        
+        // รวมจำนวนเงินในรายละเอียดชำระ
+        $('.pay-total-footer').html(0);
+
+        // รวมจำนวนเงินในชำระเงินด้วยวิธีอื่น
+        $('#t_other_pay').val(0);
+
+        // เงินทอน
+        $("#pay-change-footer").html(0);
     }
 
 
@@ -879,6 +957,40 @@
 
         let div = $('#'+no).closest('div');
         div.remove();
+
+        torn();
+
+        Dashmix.helpers('notify', {type: 'danger', icon: 'fa fa-times mr-1', message: 'ลบแล้ว'});
+    })
+
+    // ปุ่มลบ ของการชำระเงินด้วยเงินสด
+    $(document).on('click','.btn-del-cash',function(){
+
+        let amount = $(this).attr('cash-amount');
+        let no = $(this).attr('del_cash'); 
+
+        // ช่องรับเงิน
+        let money = $('#getmoney').val();
+        if(money == ''){
+            money = 0;
+        }
+        let tt_money = parseFloat(money) - parseFloat(amount);
+        $('#getmoney').val(tt_money);
+
+        // รวมจำนวนเงินในรายละเอียดชำระ
+        let pay_total = parseFloat($('.pay-total-footer').html()) - parseFloat(amount);
+        $('.pay-total-footer').html(pay_total);
+
+        // รวมจำนวนเงินในชำระเงินด้วยวิธีอื่น
+        $('#t_other_pay').val(pay_total);
+
+        let tr = $(this).closest('tr');
+        tr.remove();
+
+        let div = $('#'+no).closest('div');
+        div.remove();
+
+        torn();
 
         Dashmix.helpers('notify', {type: 'danger', icon: 'fa fa-times mr-1', message: 'ลบแล้ว'});
     })
