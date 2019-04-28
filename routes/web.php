@@ -60,6 +60,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/salebill','TbSaleBillController');  //new
     Route::get('salebill_product','TbSaleController@check_product');  //new
     Route::post('salebill_pay','TbSaleBillController@pay');  //new
+    Route::get('re_print_receive/{sbno}/{pp}','TbSaleBillController@re_print_receive');
 
 
     //  คลังสินค้า

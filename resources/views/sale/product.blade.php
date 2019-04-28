@@ -145,23 +145,21 @@
                                                     <div class="form-group row">
                                                         <label class="col-sm-6 col-form-label" >รวมเงิน</label>
                                                         <div class="col-sm-6">
-                                                            <h3 id="total-pay"></h3>
-                                                            <input type="hidden" class="form-control sum_cash" value="" readonly id="pricetotal" name="pricetotal" >
+                                                            <input type="text" class="form-control sum_cash text-right text-primary" value="" readonly id="pricetotal" name="pricetotal" >
                                                         </div>
                                                     </div>
 
                                                     <div class="form-group row">
                                                         <label class="col-sm-6 col-form-label" >ส่วนลด</label>
                                                         <div class="col-sm-6">
-                                                            <input type="decimal" class="form-control discount" value="0" onfocusout="input0()" onkeyup="torn()" id="discount" name="discount" maxlength="11">
+                                                            <input type="text" class="form-control discount text-right" value="0" onfocusout="input0()" onkeyup="torn()" id="discount" name="discount" maxlength="11">
                                                         </div>
                                                     </div>
 
                                                     <div class="form-group row">
                                                         <label class="col-sm-6 col-form-label" >รวมเงินที่ต้องชำระ</label>
                                                         <div class="col-sm-6">
-                                                            <h3 id="total-payall"></h3>
-                                                            <input type="hidden" class="form-control sum_cash_all" value="" readonly id="pricetotal_all" name="pricetotal_all" >
+                                                            <input type="text" class="form-control sum_cash_all text-right text-danger" value="" readonly id="pricetotal_all" name="pricetotal_all" >
                                                         </div>
                                                     </div>
 
@@ -184,14 +182,14 @@
                                                     <div class="form-group row">
                                                         <label class="col-sm-6 col-form-label" >รวม</label>
                                                         <div class="col-sm-6">
-                                                            <h4 id="pay-total-footer" class="pay-total-footer">0</h4>
+                                                            <input type="text" class="form-control pay-total-footer text-right" value="0" readonly id="pay-total-footer" name="pay-total-footer" >
                                                         </div>
                                                     </div>
 
                                                     <div class="form-group row">
                                                         <label class="col-sm-6 col-form-label" >เงินทอน</label>
                                                         <div class="col-sm-6">
-                                                            <h4 id="pay-change-footer" class="pay-change-footer">0</h4>
+                                                            <input type="text" class="form-control pay-change-footer text-right text-danger" value="0" readonly id="pay-change-footer" name="pay-change-footer" >
                                                         </div>
                                                     </div>
 
@@ -219,7 +217,7 @@
 
                                                     <div class="form-group">
                                                         <label for="t_name">รับเงิน</label>
-                                                        <input type="decimal" class="form-control getmoney" onkeyup="torn()"  id="getmoney" name="getmoney" maxlength="11">
+                                                        <input type="decimal" class="form-control getmoney text-right" onkeyup="torn()"  id="getmoney" name="getmoney" maxlength="11" value="0">
                                                     </div>
 
                                                     <div class="form-group m-2">
@@ -250,7 +248,7 @@
                             </div>
                             <div class="block-content block-content-full text-right bg-light">
                                 <button type="button" class="btn btn-sm btn-light" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="pay()">
+                                <button type="button" class="btn btn-primary" id="btn-save" disabled="" onclick="pay()">
                                     <i class="fa fa-print"></i>
                                     บันทึก / พิมพ์</button>
                             </div>
@@ -346,7 +344,8 @@
 
                         <input type="hidden" name="pay_discount" id="pay_discount" value="0">
                         <input type="hidden" name="pay_getmoney" id="pay_getmoney" value="0">
-                        <input type="hidden" name="t_other_pay" id="t_other_pay" value="0">
+                        <input type="hidden" name="pay_total" id="pay_total" value="0">
+                        <input type="hidden" name="pay_change" id="pay_change" value="0">
 
                         <!-- จ่ายด้วยวิธีอื่นๆ -->
                         <div class="other-pay"></div>
@@ -592,8 +591,9 @@
         $('.pay-etc').empty().html(pay_etc + pay_add);
         
         // รวมจำนวนเงินในรายละเอียดชำระ
-        let pay_total = parseFloat($('.pay-total-footer').html()) + parseFloat(txt_amount);
-        $('.pay-total-footer').html(pay_total);
+        let pay_total = parseFloat($('.pay-total-footer').val()) + parseFloat(txt_amount);
+        $('.pay-total-footer').val(pay_total);
+        $('#pay_total').val(pay_total);
 
         // รวมจำนวนเงินในชำระเงินด้วยวิธีอื่น
         $('#t_other_pay').val(pay_total);
@@ -627,8 +627,9 @@
         $('.pay-etc').empty().html(pay_etc + pay_add);
         
         // รวมจำนวนเงินในรายละเอียดชำระ
-        let pay_total = parseFloat($('.pay-total-footer').html()) + parseFloat($('#t_check_amount').val());
-        $('.pay-total-footer').html(pay_total);
+        let pay_total = parseFloat($('.pay-total-footer').val()) + parseFloat($('#t_check_amount').val());
+        $('.pay-total-footer').val(pay_total);
+        $('#pay_total').val(pay_total);
 
         // รวมจำนวนเงินในชำระเงินด้วยวิธีอื่น
         $('#t_other_pay').val(pay_total);
@@ -653,7 +654,7 @@
         let c_name = "<input type='hidden' name='credit_name["+dt+"]' value='"+ $('#t_credit_name').val() + "'>";
         let c_no = "<input type='hidden' name='credit_no["+dt+"]' value='"+ $('#t_credit_no').val() + "'>";
         let c_expired = "<input type='hidden' name='credit_expired["+dt+"]' value='"+ $('#t_credit_expired').val() + "'>";
-        let c_installment = "<input type='hidden' name='credit_installment' value='"+ $('#t_credit_installment').val() + "'>";
+        let c_installment = "<input type='hidden' name='credit_installment["+dt+"]' value='"+ $('#t_credit_installment').val() + "'>";
         let c_isim = "<input type='hidden' name='credit_isim["+dt+"]' value='"+ $('#t_credit_isim').val() + "'>";
         let c_pay = "<input type='hidden' name='credit_pay["+dt+"]' value='"+ $('#t_credit_pay').val() + "'>";
         let c_free = "<input type='hidden' name='credit_free["+dt+"]' value='"+ $('#t_credit_free').val() + "'>";
@@ -672,8 +673,9 @@
         $('.pay-etc').empty().html(pay_etc + pay_add);
         
         // รวมจำนวนเงินในรายละเอียดชำระ
-        let pay_total = parseFloat($('.pay-total-footer').html()) + parseFloat($('#t_credit_pay').val());
-        $('.pay-total-footer').html(pay_total);
+        let pay_total = parseFloat($('.pay-total-footer').val()) + parseFloat($('#t_credit_pay').val());
+        $('.pay-total-footer').val(pay_total);
+        $('#pay_total').val(pay_total);
 
         // รวมจำนวนเงินในชำระเงินด้วยวิธีอื่น
         $('#t_other_pay').val(pay_total);
@@ -708,11 +710,11 @@
                 let total_pay = $('#sum_cash').html();
 
                 // รวมเงิน
-                $('#total-pay').html(total_pay);
+                //$('#total-pay').html(total_pay);
                 $('#pricetotal').val(total_pay);
 
                 // รวมเงินที่ต้องชำระ
-                $("#total-payall").html(total_pay);
+                //$("#total-payall").html(total_pay);
                 $("#pricetotal_all").val(total_pay);
             }
         });
@@ -767,12 +769,13 @@
         let e = $("#t_other_pay").val();  // รวมเงินที่ชำระด้วยวิธีอื่น
         //let d = parseFloat(c) - parseFloat(a) + parseFloat(b) + parseFloat(e);
         let d = $("#pricetotal_all").val(); // รวมเงินที่ต้องชำระ หลังหักส่วนลด
+        let f = $("#pay-total-footer").val(); // รวม (เงินสด + อื่นๆ)
 
         let total = parseFloat(a) - parseFloat(b) ;
-        let change = parseFloat(e) - parseFloat(d);
+        let change = parseFloat(f) - parseFloat(d);
 
         // รวมเงินที่ต้องชำระ
-        $("#total-payall").html(total);
+        //$("#total-payall").html(total);
         $("#pricetotal_all").val(total);
 
         $("#total").val(change);
@@ -780,7 +783,33 @@
         $("#pay_getmoney").val(c);
 
         // เงินทอน
-        $("#pay-change-footer").html(change);
+        if(change < 0)
+        change = 0;
+        $("#pay-change-footer").val(change);
+        $("#pay_change").val(change);
+
+        // ปุ่มบันทึก / พิมพ์
+        if(d <= f){
+            $("#btn-save").prop('disabled', false);
+        }else{
+            $("#btn-save").prop('disabled', true);
+        }
+
+        // รายละเอียดการชำระเงินสด
+        let t_cash = $("#text-cash").html();
+        //console.log(t_cash);
+
+        if(c>0){
+            if(t_cash){
+                $("#text-cash").html(c);
+            }else{
+                // เพิ่มรายละเอียดการชำระ
+                let pay_etc = $(".pay-etc").html();
+                let pay_add = '<tr><td class="text-left">เงินสด</td><td class="text-center" id="text-cash">' + c + '</td><td class="text-center"><a class="btn-del-cash"><i class="fa fa-trash text-danger"></i></a></td></tr>';
+
+                $('.pay-etc').empty().html(pay_etc + pay_add);
+            }
+        }
     }
 
     function get_cash(num)
@@ -792,15 +821,24 @@
         let tt_money = parseFloat(num) + parseFloat(money);
         $('#getmoney').val(tt_money);
 
+        // // รายละเอียดการชำระเงินสด
+        // let t_cash = $("#text-cash").html();
+        // //console.log(t_cash);
 
-        // เพิ่มรายละเอียดการชำระ
-        let pay_etc = $(".pay-etc").html();
-        let pay_add = '<tr><td class="text-left">เงินสดแบงค์ '+ num + '</td><td class="text-center">' + num + '</td><td class="text-center"><a  class="btn-del-cash" cash-amount="' + num + '" del_cash="cahs'+num+ '"><i class="fa fa-trash text-danger"></i></a></td></tr>';
-        $('.pay-etc').empty().html(pay_etc + pay_add);
+        // if(t_cash){
+        //     $("#text-cash").html(tt_money);
+        // }else{
+        //     // เพิ่มรายละเอียดการชำระ
+        //     let pay_etc = $(".pay-etc").html();
+        //     let pay_add = '<tr><td class="text-left">เงินสด</td><td class="text-center" id="text-cash">' + tt_money + '</td><td class="text-center"><a class="btn-del-cash" cash-amount="' + tt_money + '" del_cash="cash'+tt_money+ '"><i class="fa fa-trash text-danger"></i></a></td></tr>';
+
+        //     $('.pay-etc').empty().html(pay_etc + pay_add);
+        // }
         
         // รวมจำนวนเงินในรายละเอียดชำระ
-        let pay_total = parseFloat($('.pay-total-footer').html()) + parseFloat(num);
-        $('.pay-total-footer').html(pay_total);
+        let pay_total = parseFloat($('.pay-total-footer').val()) + parseFloat(num);
+        $('.pay-total-footer').val(pay_total);
+        $('#pay_total').val(pay_total);
 
         // รวมจำนวนเงินในชำระเงินด้วยวิธีอื่น
         $('#t_other_pay').val(pay_total);
@@ -825,13 +863,18 @@
         $('.pay-etc').empty();
         
         // รวมจำนวนเงินในรายละเอียดชำระ
-        $('.pay-total-footer').html(0);
+        $('.pay-total-footer').val(0);
+        $('#pay_total').val(0);
 
         // รวมจำนวนเงินในชำระเงินด้วยวิธีอื่น
         $('#t_other_pay').val(0);
 
         // เงินทอน
-        $("#pay-change-footer").html(0);
+        $("#pay-change-footer").val(0);
+        $('#pay_change').val(0);
+
+        // ปุ่มบันทึก
+        $("#btn-save").prop('disabled', true);
     }
 
 
@@ -946,8 +989,9 @@
         let no = $(this).attr('del_other'); 
 
         // รวมจำนวนเงินในรายละเอียดชำระ
-        let pay_total = parseFloat($('.pay-total-footer').html()) - parseFloat(amount);
-        $('.pay-total-footer').html(pay_total);
+        let pay_total = parseFloat($('.pay-total-footer').val()) - parseFloat(amount);
+        $('.pay-total-footer').val(pay_total);
+        $('#pay_total').val(pay_total);
 
         // รวมจำนวนเงินในชำระเงินด้วยวิธีอื่น
         $('#t_other_pay').val(pay_total);
@@ -966,20 +1010,18 @@
     // ปุ่มลบ ของการชำระเงินด้วยเงินสด
     $(document).on('click','.btn-del-cash',function(){
 
-        let amount = $(this).attr('cash-amount');
-        let no = $(this).attr('del_cash'); 
+        let amount = $("#text-cash").html();
 
         // ช่องรับเงิน
-        let money = $('#getmoney').val();
-        if(money == ''){
-            money = 0;
-        }
-        let tt_money = parseFloat(money) - parseFloat(amount);
-        $('#getmoney').val(tt_money);
+        $('#getmoney').val(0);
 
         // รวมจำนวนเงินในรายละเอียดชำระ
-        let pay_total = parseFloat($('.pay-total-footer').html()) - parseFloat(amount);
-        $('.pay-total-footer').html(pay_total);
+        let pay_total = parseFloat($('.pay-total-footer').val()) - parseFloat(amount);
+        if(pay_total < 0)
+        pay_total = 0;
+        
+        $('.pay-total-footer').val(pay_total);
+        $('#pay_total').val(pay_total);
 
         // รวมจำนวนเงินในชำระเงินด้วยวิธีอื่น
         $('#t_other_pay').val(pay_total);
@@ -987,8 +1029,8 @@
         let tr = $(this).closest('tr');
         tr.remove();
 
-        let div = $('#'+no).closest('div');
-        div.remove();
+        // let div = $('#'+no).closest('div');
+        // div.remove();
 
         torn();
 
