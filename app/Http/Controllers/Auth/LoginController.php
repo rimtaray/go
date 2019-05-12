@@ -48,13 +48,13 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         if($request->isMethod('get'))
-        return view('auth.login2');
+        return view('auth.login');
 
         $username = $request->input('username');
         $password = $request->input('password');
 
         if($username=="" || $password=="")
-        return redirect('login2')->with('error','กรุณาระบุอีเมลและรหัสผ่าน');
+        return redirect('login')->with('error','กรุณาระบุอีเมลและรหัสผ่าน');
 
         $user = User::where("u_email",$username)->first();
         

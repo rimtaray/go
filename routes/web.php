@@ -4,9 +4,9 @@ use App\TbWalletCat;
 use Illuminate\Support\Facades\Request;
 
 
-Route::view('/','auth.login2');
-Route::view('/login','auth.login2');
-Route::match(['get','post'],'/login2',"Auth\LoginController@login")->name('login');
+Route::view('/','auth.login');
+Route::view('/login','auth.login');
+Route::match(['get','post'],'/login',"Auth\LoginController@login")->name('login');
 Route::post('/loginme','Auth\LoginController@login');
 Route::get('/logout',"Auth\LoginController@logout");
 

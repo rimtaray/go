@@ -93,15 +93,6 @@
 @section('js')
     <script src="{{asset('js/ajax-crud-modal-form.js')}}"></script>
     <script src="https://use.fontawesome.com/2c7a93b259.js"></script>
-
-    <script language="javascript">
-        function CheckNum(){
-        if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 13){
-            swal("ข้อมูลไม่ถูกต้อง!", "กรอกเฉพาะตัวเลขเท่านั้น!");
-            event.returnValue = false;
-            }
-        }
-    </script>
-
+    <script src="{{asset('js/user_manage/myaccount.js')}}"></script>
 
 @endsection

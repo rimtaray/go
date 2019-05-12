@@ -178,20 +178,6 @@
 @section('js')
     <script src="{{asset('js/ajax-crud-modal-form.js')}}"></script>
     <script src="https://use.fontawesome.com/2c7a93b259.js"></script>
+    <script src="{{asset('js/supplier/list.js')}}"></script>
 
-
-    <script language="javascript">
-
-        function fncSubmit_create()
-        {
-            if(document.form1.t_name.value == "")
-            {
-                    document.form1.t_name.focus();
-                    swal("ข้อมูลยังไม่ครบ!", "โปรดระบุชื่อผู้ขาย");
-                    return false;
-            }
-    
-            document.form1.submit();
-        }
-    </script>
 @endsection
